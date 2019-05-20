@@ -14,7 +14,7 @@ server.use('/api/users/', usersRouter)
 server.use('/api/auth/', authRouter)
 
 server.get('/', (req, res) => {
-    res.status(200).json('test')
+    res.status(200).json(process.env.MOTD)
 })
 
 module.exports = server;
