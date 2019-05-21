@@ -10,8 +10,8 @@ router.post('/register', (req, res) => {
     user.password = hash;
 
     Users.add(user)
-        .then(saved => {
-            res.status(201).json(saved);
+        .then(user => {
+            res.status(201).json(user);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -42,8 +42,7 @@ router.post('/login', (req, res) => {
 function generateToken(user) {
     const payload = {
         subject: user.id,
-        username: user.username,
-        roles: ['student']
+        username: user.username
     };
 
     const secret = 'keept it secret, keep it safe';
