@@ -9,6 +9,7 @@ const server = express();
 
 server.use(helmet());
 server.use(express.json());
+server.use(cors());
 
 server.use('/api/users/', usersRouter)
 server.use('/api/auth/', authRouter)
