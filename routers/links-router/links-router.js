@@ -26,7 +26,7 @@ router.get('/:id/links', (req, res) => {
 });
 
 router.get('/:id/categories', (req, res) => {
-    db.findByCategory(req.params.id)
+    db.findAllCategory(req.params.id)
         .then(categories => {
             res.status(200).json(categories)
         })
@@ -50,6 +50,27 @@ router.post('/:id/categories', (req, res) => {
         })
 })
 
-router.get('/:id/links')
+router.delete('/:id/links', (req, res) => {
+    if(req.query.category) {
+        db.findCategoryCreator(req.query.category)
+        .then(res => {
+            if(req.params.id = res[0].created_by) {
+                db.remove(req.query.category)
+                    .then(response => {
+                        res.status(200).json({message: 'category deleted successfully', response})
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        // res.send(500).json(err)
+                    })
+            } else {
+                res.status(401).json({message: 'you can only delete categories created by you'})
+            }
+        })
+        .catch(err => {
+            res.send(err)
+        })
+    }
+})
 
 module.exports = router;
