@@ -5,6 +5,7 @@ module.exports = {
   find,
   findBy,
   findById,
+  findByCategory,
 };
 
 function find() {
@@ -29,6 +30,15 @@ function findBy(id, filter) {
     );
 }
 
+function findByCategory(id) {
+  return db.raw(
+    `SELECT 
+      categories.id, categories.title, categories.color, categories.created_by, users.username
+    from categories
+    inner join users on users.id = categories.created_by
+    where categories.created_by = ${id}`
+  )
+}
 async function add(user) {
   const [id] = await db('shared_links').insert(user);
 
