@@ -6,6 +6,7 @@ module.exports = {
   findBy,
   findById,
   findByCategory,
+  addCategory,
 };
 
 function find() {
@@ -39,14 +40,22 @@ function findByCategory(id) {
     where categories.created_by = ${id}`
   )
 }
+
 async function add(user) {
   const [id] = await db('shared_links').insert(user);
 
   return findById(id);
 }
 
-function findById(id) {
-  return db('shared_links')
+async function addCategory(category) {
+  const [id] = await db('categories').insert(category)
+
+  return findById(id, 'categories');
+}
+
+
+function findById(id, table) {
+  return db(table)
     .where({ id })
     .first();
 }
