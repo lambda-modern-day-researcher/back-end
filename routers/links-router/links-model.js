@@ -1,15 +1,16 @@
 const db = require('../../database/dbConfig.js');
 
 module.exports = {
-  add,
   find,
   findByPinned,
   findById,
   findByCategory,
   addCategory,
   findCategoryCreator,
-  remove,
   findAllCategory,
+  update,
+  addLinks,
+  addSharedLinks,
 };
 
 function find() {
@@ -69,21 +70,37 @@ function findByCategory(userId, categoryId) {
 }
 
 function findCategoryCreator(id) {
-  let categoryId = db.raw(`SELECT * from categories where id = ${id}`)
+  let category = db.raw(`SELECT * from categories where id = ${id}`)
 
-  return categoryId
+  return category
 }
 
-function remove(id) {
+// function remove(id) {
+//   return db('categories')
+//       .where({ id })
+//       .del();
+// }
+
+function update(id, changes) {
   return db('categories')
       .where({ id })
-      .del();
+      .update(changes)
+      .then(count => {
+          if (count > 0) {
+              return findById(id);
+          } else {
+              return null;
+          }
+      });
 }
 
-async function add(user) {
-  const [id] = await db('shared_links').insert(user);
+function addLinks(title, url, created_by) {
+  console.log(title, url, created_by)
+  return db.raw(`INSERT INTO links (title, url, created_by) VALUES ('${title}', '${url}', '${created_by}')`)
+}
 
-  return findById(id);
+function addSharedLinks(link_id, shared_by, shared_with) {
+  return db.raw(`INSERT INTO shared_links (link_id, shared_by, shared_with) VALUES ('${link_id}', '${shared_by}', '${shared_with}')`)  
 }
 
 function findById(id, table) {

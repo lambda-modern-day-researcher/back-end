@@ -55,13 +55,12 @@ router.delete('/:id/links', (req, res) => {
         db.findCategoryCreator(req.query.category)
         .then(res => {
             if(req.params.id = res[0].created_by) {
-                db.remove(req.query.category)
+                db.update(req.query.category, {delete: true})
                     .then(response => {
-                        res.status(200).json({message: 'category deleted successfully', response})
+                        res.send({message: 'category deleted successfully', response})
                     })
                     .catch(err => {
-                        console.log(err)
-                        // res.send(500).json(err)
+                        console.log(err, 'update')
                     })
             } else {
                 res.status(401).json({message: 'you can only delete categories created by you'})
@@ -72,5 +71,27 @@ router.delete('/:id/links', (req, res) => {
         })
     }
 })
+
+router.post('/:id/links', (req, res) => {
+    db.addLinks(req.body.title, req.body.url, req.body.created_by)
+        .then(link => {
+            // if(link) {
+            //     db.addData(link.id, req.params.id, req.body.shared_with)
+            //         .then(response => {
+            //             res.status(200).json(dish)
+            //         })
+            //         .catch(err => {
+            //             res.send(err)
+            //         })
+            // }
+            res.status(200).json({message: 'successfully added a link'})
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({ message: 'We ran into an error adding the link', error });
+        });
+
+})
+
 
 module.exports = router;
