@@ -29,5 +29,19 @@ router.get('/:id/categories', (req, res) => {
         })
 })
 
+router.post('/:id/categories', (req, res) => {
+    const category = { 
+        title: req.body.title, 
+        color: req.body.color, 
+        created_by: req.params.id 
+    } 
+    db.addCategory(category)
+        .then(category => {
+            res.status(200).json({message: `you've added a nuew category`, category})
+        })
+        .catch(err => {
+            res.send(err)
+        })
+})
 
 module.exports = router;
