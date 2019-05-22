@@ -1,7 +1,12 @@
-
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('users').truncate()
+  return knex('users')
+  .then(() => {
+    return knex.raw('PRAGMA FOREIGN_KEYS = OFF')
+  })
+  .then(() => {
+    return knex('users').truncate()
+  })
     .then(function () {
       // Inserts seed entries
       return knex('users').insert([
