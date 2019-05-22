@@ -12,9 +12,9 @@ server.use(helmet());
 server.use(express.json());
 server.use(cors());
 
-server.use('/api/users/', usersRouter)
+// server.use('/api/users/', usersRouter)
 server.use('/api/auth/', authRouter)
-server.use('/api/auth/user', linksRouter)
+server.use('/api/auth/users', linksRouter)
 
 server.get('/', (req, res) => {
     res.status(200).json(process.env.MOTD)
