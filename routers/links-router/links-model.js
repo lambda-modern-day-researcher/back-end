@@ -7,6 +7,9 @@ module.exports = {
   findById,
   findByCategory,
   addCategory,
+  findCategoryCreator,
+  remove,
+  findAllCategory,
 };
 
 function find() {
@@ -14,24 +17,24 @@ function find() {
 }
 
 function findByPinned(userId, filter) {
-    return db.raw(
-        `SELECT 
-            links_activity.read, links_activity.is_pinned, links_activity.rating, 
-            users.email, 
-            links.id, links.title, links.url, links.created_by, links.created_at, 
-            shared_links.shared_by, shared_links.shared_with,
-            categories.title as category_title, categories.color 
-        from shared_links 
-        cross join links on shared_links.link_id = links.id
-        cross join users on shared_links.shared_with = users.id
-        inner join links_activity on links.id = links_activity.link_id
-        inner join links_categories on links.id = links_categories.link_id
-        inner join categories on categories.created_by = users.id
-        where links_activity.is_pinned = ${filter} AND users.id = ${userId}`
-    );
+  return db.raw(
+    `SELECT 
+      links_activity.read, links_activity.is_pinned, links_activity.rating, 
+      users.email, 
+      links.id, links.title, links.url, links.created_by, links.created_at, 
+      shared_links.shared_by, shared_links.shared_with,
+      categories.title as category_title, categories.color 
+    from shared_links 
+    cross join links on shared_links.link_id = links.id
+    cross join users on shared_links.shared_with = users.id
+    inner join links_activity on links.id = links_activity.link_id
+    inner join links_categories on links.id = links_categories.link_id
+    inner join categories on categories.created_by = users.id
+    where links_activity.is_pinned = ${filter} AND users.id = ${userId}`
+  );
 }
 
-function findByCategory(id) {
+function findAllCategory(id) {
   return db.raw(
     `SELECT 
       categories.id, categories.title, categories.color, categories.created_by, users.username
@@ -48,7 +51,6 @@ async function addCategory(category) {
 }
 
 function findByCategory(userId, categoryId) {
-
   return db.raw(
     `SELECT 
         links_activity.read, links_activity.is_pinned, links_activity.rating, 
@@ -63,7 +65,19 @@ function findByCategory(userId, categoryId) {
     cross join links_categories on links.id = links_categories.link_id
     cross join categories on categories.created_by = users.id
     where categories.id = ${categoryId} AND users.id = ${userId}`
-    );
+  );
+}
+
+function findCategoryCreator(id) {
+  let categoryId = db.raw(`SELECT * from categories where id = ${id}`)
+
+  return categoryId
+}
+
+function remove(id) {
+  return db('categories')
+      .where({ id })
+      .del();
 }
 
 async function add(user) {
@@ -71,8 +85,6 @@ async function add(user) {
 
   return findById(id);
 }
-
-
 
 function findById(id, table) {
   return db(table)
