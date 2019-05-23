@@ -58,13 +58,13 @@ router.post('/:id/categories', (req, res) => {
 })
 
 //delete category
-router.delete('/:id/links', (req, res) => {
-    if(req.query.category) {
-        console.log(req.query.category)
-        db.findCategoryCreator(req.query.category)
+router.delete('/:user_id/links/category/:id', (req, res) => {
+
+        console.log(req.params.id, 'hi')
+        db.findCategoryCreator(req.params.id)
         .then(resDb => {
-            if(req.params.id = resDb[0].created_by) {
-                db.update(req.query.category)
+            if(req.params.user_id = resDb[0].created_by) {
+                db.update(req.params.id)
                     .then(response => {
                         res.status(200).send({message: 'category deleted successfully'});
                     })
@@ -78,8 +78,13 @@ router.delete('/:id/links', (req, res) => {
         .catch(err => {
             res.send(err)
         })
-    }
+
 })
+
+//delete links
+// router.delete('/:id/links/delete', (req, res) => {
+//     db.
+// })
 
 router.post('/:id/links', (req, res) => {
     db.addLinks(req.body.title, req.body.url, req.body.created_by)
