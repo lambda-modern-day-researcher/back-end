@@ -74,18 +74,23 @@ router.delete('/:id/links', (req, res) => {
     }
 })
 
-//not working
 router.post('/:id/links', (req, res) => {
     db.addLinks(req.body.title, req.body.url, req.body.created_by)
         .then(link => {
             db.getTheLastItem('links')
                 .then(resDb => {
-                    db.shareLink(resDb[0].id, resDb[0].created_by, req.body.shared_with)
-                        .then(response => {
-                            res.status(200).json({message: 'link added successfully'})
+                    db.autoCreateLinkActivity(resDb[0].id, req.params.id)
+                        .then(resDb1 => {
+                            db.shareLink(resDb[0].id, resDb[0].created_by, req.body.shared_with)
+                            .then(response => {
+                                res.status(200).json({message: 'link added successfully'})
+                            })
+                            .catch(err1 => {
+                                res.send({err1, message: 'share_link didnt work', resDb})
+                            })    
                         })
-                        .catch(err1 => {
-                            res.send({err1, message: 'share_link didnt work', resDb})
+                        .catch(errrrr => {
+                            res.send({message: "createLinkActivity did not work", errrrr})
                         })
                 })
                 .catch(err => {
@@ -109,6 +114,24 @@ router.post('/:id/links/share',  (req, res) => {
                 })
         })
         .catch(err => {
+            res.send(err)
+        })
+})
+
+router.put('/:id/links/activity', (req, res) => {
+    let activity = {
+        read: req.body.read,
+        isPinned: req.body.isPinned,
+        rating: req.body.rating,
+        link_id: req.body.link_id,
+        user_id: req.params.id
+    }
+    db.changeLinkActivity(activity)
+        .then(response => {
+            res.status(200).send({message: 'link updated'});
+        })
+        .catch(err => {
+            console.log(err)
             res.send(err)
         })
 })
