@@ -58,27 +58,24 @@ router.post('/:id/categories', (req, res) => {
 })
 
 //delete category
-router.delete('/:user_id/links/category/:id', (req, res) => {
-
-        console.log(req.params.id, 'hi')
-        db.findCategoryCreator(req.params.id)
-        .then(resDb => {
-            if(req.params.user_id = resDb[0].created_by) {
-                db.update(req.params.id)
-                    .then(response => {
-                        res.status(200).send({message: 'category deleted successfully'});
-                    })
-                    .catch(err => {
-                        console.log(err, 'update')
-                    })
-            } else {
-                res.status(401).json({message: 'you can only delete categories created by you'})
-            }
-        })
-        .catch(err => {
-            res.send(err)
-        })
-
+router.delete('/:user_id/category/:id', (req, res) => {
+    db.findCategoryCreator(req.params.id)
+    .then(resDb => {
+        if(req.params.user_id = resDb[0].created_by) {
+            db.update(req.params.id)
+                .then(response => {
+                    res.status(200).send({message: 'category deleted successfully'});
+                })
+                .catch(err => {
+                    console.log(err, 'update')
+                })
+        } else {
+            res.status(401).json({message: 'you can only delete categories created by you'})
+        }
+    })
+    .catch(err => {
+        res.send(err)
+    })
 })
 
 //delete links
