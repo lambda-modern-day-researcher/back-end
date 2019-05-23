@@ -79,9 +79,15 @@ router.delete('/:user_id/category/:id', (req, res) => {
 })
 
 //delete links
-// router.delete('/:id/links/delete', (req, res) => {
-//     db.
-// })
+router.delete('/:user_id/links/:id/', (req, res) => {
+    db.deleteLink(req.params.id)
+        .then(resp => {
+            res.status(200).send({message: 'link deleted successfully'})
+        })
+        .catch(err => {
+            res.send(err)
+        })
+})
 
 router.post('/:id/links', (req, res) => {
     db.addLinks(req.body.title, req.body.url, req.body.created_by)

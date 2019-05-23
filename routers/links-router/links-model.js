@@ -17,6 +17,7 @@ module.exports = {
   changeLinkActivity,
   updateTitle,
   changeLinkActivityCompleted,
+  deleteLink,
 };
 
 function find() {
@@ -39,7 +40,8 @@ function findByPinned(userId, filter) {
     left join categories on links_categories.category_id = categories.id
     WHERE shared_links.shared_by = ${userId} 
     AND shared_Links.shared_with = ${userId} 
-    AND links_activity.is_pinned = ${filter}`
+    AND links_activity.is_pinned = ${filter} 
+    AND shared_links.remove_link = 0`
   );
 }
 
@@ -104,6 +106,10 @@ function findCategoryCreator(id) {
 
 function update(id) {
   return db.raw(`UPDATE categories SET [delete] = true WHERE id = ${id};`)
+}
+
+function deleteLink(id) {
+  return db.raw(`UPDATE shared_links SET remove_link = true WHERE id = ${id};`)
 }
 
 function addLinks(title, url, created_by) {
