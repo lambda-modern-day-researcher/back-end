@@ -57,16 +57,16 @@ router.post('/:id/categories', (req, res) => {
         })
 })
 
-//not working
+//delete category
 router.delete('/:id/links', (req, res) => {
     if(req.query.category) {
         console.log(req.query.category)
         db.findCategoryCreator(req.query.category)
-        .then(res => {
-            if(req.params.id = res[0].created_by) {
-                db.update(req.query.category, true)
+        .then(resDb => {
+            if(req.params.id = resDb[0].created_by) {
+                db.update(req.query.category)
                     .then(response => {
-                        res.send({message: 'category deleted successfully', response})
+                        res.status(200).send({message: 'category deleted successfully'});
                     })
                     .catch(err => {
                         console.log(err, 'update')

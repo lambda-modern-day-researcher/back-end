@@ -65,11 +65,9 @@ function findByPinned(userId, filter) {
 
 function findAllCategory(id) {
   return db.raw(
-    `SELECT 
-      categories.id, categories.title, categories.color, categories.created_by, users.username
+    `SELECT *
     from categories
-    inner join users on users.id = categories.created_by
-    where categories.created_by = ${id}`
+    where created_by = ${id} AND [delete] = 0;`
   )
 }
 
@@ -104,17 +102,8 @@ function findCategoryCreator(id) {
   return category
 }
 
-function update(id, changes) {
-  return db('categories')
-      .where({ id })
-      .update(changes)
-      .then(count => {
-          if (count > 0) {
-              return findById(id);
-          } else {
-              return null;
-          }
-      });
+function update(id) {
+  return db.raw(`UPDATE categories SET [delete] = true WHERE id = ${id};`)
 }
 
 function addLinks(title, url, created_by) {
