@@ -180,4 +180,14 @@ router.put('/:user_id/links/:id/title', (req, res) => {
         })
 })
 
+router.post('/:user_id/links/:link_id/categories/:id', (req, res) => {
+    db.categoryToLink(req.params.link_id, req.params.id)
+        .then(resp => {
+            res.status(200).send({message: 'link added to a category successfully'})
+        })
+        .catch(err => {
+            res.send(err)
+        })
+})
+
 module.exports = router;

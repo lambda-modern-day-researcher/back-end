@@ -18,6 +18,7 @@ module.exports = {
   updateTitle,
   changeLinkActivityCompleted,
   deleteLink,
+  categoryToLink,
 };
 
 function find() {
@@ -154,6 +155,10 @@ function updateTitle(title, id) {
   return db.raw(`UPDATE links 
     SET title = '${title}' 
     WHERE id = ${id}`)
+}
+
+function categoryToLink(linkId, categoryId) {
+  return db.raw(`INSERT INTO links_categories (link_id, category_id) VALUES (${linkId}, ${categoryId})`)
 }
 
 function findById(id, table) {
