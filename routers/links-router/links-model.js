@@ -135,9 +135,11 @@ function shareLink(link_id, shared_by, shared_with) {
 }
 
 function autoCreateLinkActivity(link_id, user_id) {
-  return db.raw(`INSERT INTO 
+  let sql = `INSERT INTO 
     links_activity (read, is_pinned, rating, link_id, user_id) 
-    VALUES ('${false}', '${false}', '${0}', '${link_id}', '${user_id}')`)
+    VALUES (false, false, ${0}, '${link_id}', '${user_id}')`
+    console.log(sql)
+    return db.raw(sql)
 }
 
 function changeLinkActivity(activity) {

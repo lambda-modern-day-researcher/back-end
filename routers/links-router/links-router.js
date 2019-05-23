@@ -64,7 +64,7 @@ router.delete('/:id/links', (req, res) => {
         db.findCategoryCreator(req.query.category)
         .then(res => {
             if(req.params.id = res[0].created_by) {
-                db.update(req.query.category, {delete: true})
+                db.update(req.query.category, true)
                     .then(response => {
                         res.send({message: 'category deleted successfully', response})
                     })
