@@ -39,11 +39,18 @@ router.post('/:id/categories', (req, res) => {
     const category = { 
         title: req.body.title, 
         color: req.body.color, 
-        created_by: req.params.id 
+        created_by: req.params.id,
+        delete: false,
     } 
     db.addCategory(category)
         .then(category => {
-            res.status(200).json({message: `you've added a new category`, category})
+            db.getTheLastItem('categories')
+                .then(resp => {
+                    res.status(200).json({message: `you've added a new category`, resp})
+                })
+                .catch(error => {
+                    res.send(error)
+                })
         })
         .catch(err => {
             res.send(err)
@@ -118,20 +125,18 @@ router.post('/:id/links/share',  (req, res) => {
         })
 })
 
-router.put('/:id/links/activity', (req, res) => {
+router.put('/:user_id/links/:id/pinned', (req, res) => {
     let activity = {
-        read: req.body.read,
-        isPinned: req.body.isPinned,
-        rating: req.body.rating,
-        link_id: req.body.link_id,
-        user_id: req.params.id
+        link_id: req.params.id,
+        user_id: req.params.user_id
     }
     db.changeLinkActivity(activity)
         .then(response => {
-            res.status(200).send({message: 'link updated'});
+            console.log(req.params)
+            res.status(200).send({message: 'link updated'})
         })
         .catch(err => {
-            console.log(err)
+            console.log(err, req.params)
             res.send(err)
         })
 })

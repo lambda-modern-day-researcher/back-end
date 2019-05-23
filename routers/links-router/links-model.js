@@ -50,9 +50,10 @@ function findAllCategory(id) {
 }
 
 async function addCategory(category) {
-  const [id] = await db('categories').insert(category)
+  // const [id] = await db('categories').insert(category)
+  return db.raw(`INSERT INTO categories (title, created_by, color) VALUES ('${category.title}', '${category.created_by}', '${category.color}')`)
 
-  return findById(id, 'categories');
+  // return findById(id, 'categories');
 }
 
 function findByCategory(userId, categoryId) {
@@ -123,7 +124,7 @@ function autoCreateLinkActivity(link_id, user_id) {
 
 function changeLinkActivity(activity) {
   return db.raw(`UPDATE links_activity
-    SET  read = ${activity.read}, is_pinned = ${activity.isPinned}
+    SET  is_pinned = NOT is_pinned
     WHERE link_id = ${activity.link_id} AND user_id = ${activity.user_id}`)
 }
 
