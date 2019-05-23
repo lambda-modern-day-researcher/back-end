@@ -28,7 +28,7 @@ function findByPinned(userId, filter) {
   console.log(filter, userId)
   return db.raw(
     `SELECT 
-      shared_links.shared_by, shared_links.shared_with,
+      shared_links.shared_by, shared_links.shared_with, shared_links.remove_link,
       links.title, links.url, links.id as link_id ,
       links_activity.is_pinned, links_activity.read,
       links_categories.id as links_categories_id,
