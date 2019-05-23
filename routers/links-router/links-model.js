@@ -11,6 +11,8 @@ module.exports = {
   update,
   addLinks,
   addSharedLinks,
+  getTheLastItem,
+  shareLink,
 };
 
 function find() {
@@ -101,6 +103,14 @@ function addLinks(title, url, created_by) {
 
 function addSharedLinks(link_id, shared_by, shared_with) {
   return db.raw(`INSERT INTO shared_links (link_id, shared_by, shared_with) VALUES ('${link_id}', '${shared_by}', '${shared_with}')`)  
+}
+
+function getTheLastItem(table) {
+  return db.raw(`SELECT * from ${table} ORDER BY id DESC LIMIT 1`)
+}
+
+function shareLink(link_id, shared_by, shared_with) {
+  return db.raw(`INSERT INTO shared_links (link_id, shared_by, shared_with) VALUES ('${link_id}', '${shared_by}', '${shared_with}')`)
 }
 
 function findById(id, table) {

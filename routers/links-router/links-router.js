@@ -50,6 +50,8 @@ router.post('/:id/categories', (req, res) => {
         })
 })
 
+
+//not working
 router.delete('/:id/links', (req, res) => {
     if(req.query.category) {
         db.findCategoryCreator(req.query.category)
@@ -72,26 +74,43 @@ router.delete('/:id/links', (req, res) => {
     }
 })
 
+//not working
 router.post('/:id/links', (req, res) => {
     db.addLinks(req.body.title, req.body.url, req.body.created_by)
         .then(link => {
-            // if(link) {
-            //     db.addData(link.id, req.params.id, req.body.shared_with)
-            //         .then(response => {
-            //             res.status(200).json(dish)
-            //         })
-            //         .catch(err => {
-            //             res.send(err)
-            //         })
-            // }
-            res.status(200).json({message: 'successfully added a link'})
+            db.getTheLastItem('links')
+                .then(resDb => {
+                    db.shareLink(resDb[0].id, resDb[0].created_by, req.body.shared_with)
+                        .then(response => {
+                            res.status(200).json({message: 'link added successfully'})
+                        })
+                        .catch(err1 => {
+                            res.send({err1, message: 'share_link didnt work', resDb})
+                        })
+                })
+                .catch(err => {
+                    res.send({message: 'getTheLastItem didn"t work', err})
+                })
         })
         .catch(error => {
-            console.log(error)
             res.status(500).json({ message: 'We ran into an error adding the link', error });
         });
-
 })
 
+router.post('/:id/links/share',  (req, res) => {
+    db.shareLink(req.body.link_id, req.params.id, req.body.shared_with)
+        .then(resDb => {
+            db.getTheLastItem('shared_links')
+                .then(resDb2 => {
+                    res.status(200).send(resDb2)
+                })
+                .catch(err => {
+                    res.status(500).send(err)
+                })
+        })
+        .catch(err => {
+            res.send(err)
+        })
+})
 
 module.exports = router;
