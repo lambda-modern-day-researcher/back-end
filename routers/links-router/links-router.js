@@ -132,11 +132,22 @@ router.put('/:user_id/links/:id/pinned', (req, res) => {
     }
     db.changeLinkActivity(activity)
         .then(response => {
-            console.log(req.params)
+            console.log(response)
             res.status(200).send({message: 'link updated'})
         })
         .catch(err => {
             console.log(err, req.params)
+            res.send(err)
+        })
+})
+
+router.put('/:user_id/links/:id/title', (req, res) => {
+    db.updateTitle(req.body.title, req.params.id)
+        .then(res => {
+            res.status(200).send({res})
+        })
+        .catch(err => {
+            console.log(err)
             res.send(err)
         })
 })

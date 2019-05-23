@@ -15,6 +15,7 @@ module.exports = {
   shareLink,
   autoCreateLinkActivity,
   changeLinkActivity,
+  updateTitle,
 };
 
 function find() {
@@ -123,11 +124,17 @@ function autoCreateLinkActivity(link_id, user_id) {
 }
 
 function changeLinkActivity(activity) {
+  // console.log(activity)
   return db.raw(`UPDATE links_activity
-    SET  is_pinned = NOT is_pinned
-    WHERE link_id = ${activity.link_id} AND user_id = ${activity.user_id}`)
+  SET is_pinned = NOT is_pinned
+  WHERE link_id = ${activity.link_id} AND user_id = ${activity.user_id};`) 
 }
 
+function updateTitle(title, id) {
+  return db.raw(`UPDATE links 
+    SET title = ${title} 
+    WHERE id = ${id}`)
+}
 
 function findById(id, table) {
   return db(table)
