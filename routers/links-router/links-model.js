@@ -13,7 +13,8 @@ module.exports = {
   addSharedLinks,
   getTheLastItem,
   shareLink,
-  createLinkActivity,
+  autoCreateLinkActivity,
+  changeLinkActivity,
 };
 
 function find() {
@@ -114,11 +115,18 @@ function shareLink(link_id, shared_by, shared_with) {
   return db.raw(`INSERT INTO shared_links (link_id, shared_by, shared_with) VALUES ('${link_id}', '${shared_by}', '${shared_with}')`)
 }
 
-function createLinkActivity(link_id, user_id) {
+function autoCreateLinkActivity(link_id, user_id) {
   return db.raw(`INSERT INTO 
     links_activity (read, is_pinned, rating, link_id, user_id) 
     VALUES ('${false}', '${false}', '${0}', '${link_id}', '${user_id}')`)
 }
+
+function changeLinkActivity(activity) {
+  return db.raw(`UPDATE links_activity
+    SET  read = ${activity.read}, is_pinned = ${activity.isPinned}
+    WHERE link_id = ${activity.link_id} AND user_id = ${activity.user_id}`)
+}
+
 
 function findById(id, table) {
   return db(table)

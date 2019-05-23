@@ -79,7 +79,7 @@ router.post('/:id/links', (req, res) => {
         .then(link => {
             db.getTheLastItem('links')
                 .then(resDb => {
-                    db.createLinkActivity(resDb[0].id, req.params.id)
+                    db.autoCreateLinkActivity(resDb[0].id, req.params.id)
                         .then(resDb1 => {
                             db.shareLink(resDb[0].id, resDb[0].created_by, req.body.shared_with)
                             .then(response => {
@@ -118,6 +118,22 @@ router.post('/:id/links/share',  (req, res) => {
         })
 })
 
-router.post('/:id/')
+router.put('/:id/links/activity', (req, res) => {
+    let activity = {
+        read: req.body.read,
+        isPinned: req.body.isPinned,
+        rating: req.body.rating,
+        link_id: req.body.link_id,
+        user_id: req.params.id
+    }
+    db.changeLinkActivity(activity)
+        .then(response => {
+            res.status(200).send({message: 'link updated'});
+        })
+        .catch(err => {
+            console.log(err)
+            res.send(err)
+        })
+})
 
 module.exports = router;
