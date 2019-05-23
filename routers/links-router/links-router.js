@@ -57,7 +57,6 @@ router.post('/:id/categories', (req, res) => {
         })
 })
 
-
 //not working
 router.delete('/:id/links', (req, res) => {
     if(req.query.category) {
@@ -84,12 +83,16 @@ router.delete('/:id/links', (req, res) => {
 router.post('/:id/links', (req, res) => {
     db.addLinks(req.body.title, req.body.url, req.body.created_by)
         .then(link => {
+            console.log(1, link)
             db.getTheLastItem('links')
                 .then(resDb => {
+                    console.log(2, resDb)
                     db.autoCreateLinkActivity(resDb[0].id, req.params.id)
                         .then(resDb1 => {
+                            console.log(3, resDb1)
                             db.shareLink(resDb[0].id, resDb[0].created_by, req.body.shared_with)
                             .then(response => {
+                                console.log(4, response)
                                 res.status(200).json({message: 'link added successfully'})
                             })
                             .catch(err1 => {
@@ -167,6 +170,5 @@ router.put('/:user_id/links/:id/title', (req, res) => {
             res.send(err)
         })
 })
-
 
 module.exports = router;

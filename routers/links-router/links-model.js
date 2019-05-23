@@ -24,22 +24,42 @@ function find() {
 }
 
 function findByPinned(userId, filter) {
+  console.log(filter, userId)
   return db.raw(
     `SELECT 
-      links_activity.read, links_activity.is_pinned, links_activity.rating, 
-      users.email, 
-      links.id, links.title, links.url, links.created_by, links.created_at, 
       shared_links.shared_by, shared_links.shared_with,
-      categories.title as category_title, categories.color 
+      links.title, links.url, links.id as link_id ,
+      links_activity.is_pinned, links_activity.read,
+      links_categories.id as links_categories_id,
+      categories.title as category_title, categories.color as category_color, categories.id as category_id
     from shared_links 
-    cross join links on shared_links.link_id = links.id
-    cross join users on shared_links.shared_with = users.id
+    inner join links on shared_links.link_id = links.id
     inner join links_activity on links.id = links_activity.link_id
-    inner join links_categories on links.id = links_categories.link_id
-    inner join categories on categories.created_by = users.id
-    where links_activity.is_pinned = ${filter} AND users.id = ${userId}`
+    left join links_categories on links.id = links_categories.link_id
+    left join categories on links_categories.category_id = categories.id
+    where shared_links.shared_by = ${userId} AND shared_Links.shared_with = ${userId}`
   );
 }
+
+
+// function findByPinned(userId, filter) {
+//   console.log(filter, userId)
+//   return db.raw(
+//     `SELECT 
+//       links_activity.read, links_activity.is_pinned, links_activity.rating, 
+//       users.email, 
+//       links.id, links.title, links.url, links.created_by, links.created_at, 
+//       shared_links.shared_by, shared_links.shared_with,
+//       categories.title as category_title, categories.color 
+//     from shared_links 
+//     cross join links on shared_links.link_id = links.id
+//     cross join users on shared_links.shared_with = users.id
+//     cross join links_activity on links.id = links_activity.link_id
+//     cross join links_categories on links.id = links_categories.link_id
+//     cross join categories on categories.created_by = users.id
+//     where links_activity.is_pinned = ${filter} AND shared_links.shared_with = ${1}`
+//   );
+// }
 
 function findAllCategory(id) {
   return db.raw(
