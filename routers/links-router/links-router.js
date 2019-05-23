@@ -141,6 +141,22 @@ router.put('/:user_id/links/:id/pinned', (req, res) => {
         })
 })
 
+router.put('/:user_id/links/:id/completed', (req, res) => {
+    let activity = {
+        link_id: req.params.id,
+        user_id: req.params.user_id
+    }
+    db.changeLinkActivityCompleted(activity)
+        .then(response => {
+            console.log(response)
+            res.status(200).send({message: 'link updated'})
+        })
+        .catch(err => {
+            console.log(err, req.params)
+            res.send(err)
+        })
+})
+
 router.put('/:user_id/links/:id/title', (req, res) => {
     db.updateTitle(req.body.title, req.params.id)
         .then(res => {

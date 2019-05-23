@@ -16,6 +16,7 @@ module.exports = {
   autoCreateLinkActivity,
   changeLinkActivity,
   updateTitle,
+  changeLinkActivityCompleted,
 };
 
 function find() {
@@ -81,12 +82,6 @@ function findCategoryCreator(id) {
   return category
 }
 
-// function remove(id) {
-//   return db('categories')
-//       .where({ id })
-//       .del();
-// }
-
 function update(id, changes) {
   return db('categories')
       .where({ id })
@@ -124,9 +119,14 @@ function autoCreateLinkActivity(link_id, user_id) {
 }
 
 function changeLinkActivity(activity) {
-  // console.log(activity)
   return db.raw(`UPDATE links_activity
   SET is_pinned = NOT is_pinned
+  WHERE link_id = ${activity.link_id} AND user_id = ${activity.user_id};`) 
+}
+
+function changeLinkActivityCompleted(activity) {
+  return db.raw(`UPDATE links_activity
+  SET read = NOT read
   WHERE link_id = ${activity.link_id} AND user_id = ${activity.user_id};`) 
 }
 
