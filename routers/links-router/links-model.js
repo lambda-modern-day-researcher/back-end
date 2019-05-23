@@ -108,8 +108,8 @@ function update(id) {
   return db.raw(`UPDATE categories SET [delete] = true WHERE id = ${id};`)
 }
 
-function deleteLink(id) {
-  return db.raw(`UPDATE shared_links SET remove_link = true WHERE id = ${id};`)
+function deleteLink(linkId, userId) {
+  return db.raw(`UPDATE shared_links SET remove_link = true WHERE link_id = ${linkId} AND shared_with = ${userId};`)
 }
 
 function addLinks(title, url, created_by) {

@@ -80,7 +80,7 @@ router.delete('/:user_id/category/:id', (req, res) => {
 
 //delete links
 router.delete('/:user_id/links/:id/', (req, res) => {
-    db.deleteLink(req.params.id)
+    db.deleteLink(req.params.id, req.params.user_id)
         .then(resp => {
             res.status(200).send({message: 'link deleted successfully'})
         })
