@@ -159,13 +159,14 @@ router.put('/:user_id/links/:id/completed', (req, res) => {
 
 router.put('/:user_id/links/:id/title', (req, res) => {
     db.updateTitle(req.body.title, req.params.id)
-        .then(res => {
-            res.status(200).send({res})
+        .then(resDb => {
+            res.status(200).send({message: 'title updated'})
         })
         .catch(err => {
             console.log(err)
             res.send(err)
         })
 })
+
 
 module.exports = router;

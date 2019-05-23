@@ -132,7 +132,7 @@ function changeLinkActivityCompleted(activity) {
 
 function updateTitle(title, id) {
   return db.raw(`UPDATE links 
-    SET title = ${title} 
+    SET title = '${title}' 
     WHERE id = ${id}`)
 }
 
