@@ -60,6 +60,7 @@ router.post('/:id/categories', (req, res) => {
 //not working
 router.delete('/:id/links', (req, res) => {
     if(req.query.category) {
+        console.log(req.query.category)
         db.findCategoryCreator(req.query.category)
         .then(res => {
             if(req.params.id = res[0].created_by) {
