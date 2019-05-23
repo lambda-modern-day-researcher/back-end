@@ -40,7 +40,8 @@ function findByPinned(userId, filter) {
     left join categories on links_categories.category_id = categories.id
     WHERE shared_links.shared_by = ${userId} 
     AND shared_Links.shared_with = ${userId} 
-    AND links_activity.is_pinned = ${filter} 
+    AND links_activity.is_pinned = ${filter}
+    AND links_activity.read = false
     AND shared_links.remove_link = 0`
   );
 }
