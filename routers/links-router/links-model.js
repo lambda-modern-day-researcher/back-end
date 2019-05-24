@@ -19,6 +19,7 @@ module.exports = {
   changeLinkActivityCompleted,
   deleteLink,
   categoryToLink,
+  shareLinkWithOthers,  
 };
 
 function find() {
@@ -159,6 +160,18 @@ function updateTitle(title, id) {
 
 function categoryToLink(linkId, categoryId) {
   return db.raw(`INSERT INTO links_categories (link_id, category_id) VALUES (${linkId}, ${categoryId})`)
+}
+
+async function shareLinkWithOthers(userId, linkId, email) {
+  let result = await db.raw(`SELECT * FROM users WHERE email = '${email}' LIMIT 1`);
+  console.log(result)
+  if(result.length > 0) {
+    console.log(userId, linkId, result[0].id)
+    return db.raw(`INSERT INTO shared_links (link_id, shared_by, shared_with)
+    VALUES ('${linkId}', '${userId}', '${result[0].id}')`)
+  } else {
+    return db.raw("SELECT 1")
+  }
 }
 
 function findById(id, table) {

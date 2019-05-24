@@ -169,6 +169,7 @@ router.put('/:user_id/links/:id/completed', (req, res) => {
         })
 })
 
+//we changed url from "/:user_id/links/:id/title"  to "/:user_id/links/:id/" because earlier one was causing cors error.
 router.put('/:user_id/links/:id/', (req, res) => {
     db.updateTitle(req.query.title, req.params.id)
         .then(resDb => {
@@ -184,6 +185,16 @@ router.post('/:user_id/links/:link_id/categories/:id', (req, res) => {
     db.categoryToLink(req.params.link_id, req.params.id)
         .then(resp => {
             res.status(200).send({message: 'link added to a category successfully'})
+        })
+        .catch(err => {
+            res.send(err)
+        })
+})
+
+router.post('/:user_id/links/:id/social', (req, res) => {
+    db.shareLinkWithOthers(req.params.user_id, req.params.id, req.body.email)
+        .then(resp => {
+            res.status(200).send({message: 'link shared successfully!'})
         })
         .catch(err => {
             res.send(err)
