@@ -40,8 +40,7 @@ function findByPinned(userId, filter) {
     inner join links_activity on links.id = links_activity.link_id
     left join links_categories on links.id = links_categories.link_id
     left join categories on links_categories.category_id = categories.id
-    WHERE shared_links.shared_by = ${userId} 
-    AND shared_Links.shared_with = ${userId} 
+    WHERE shared_Links.shared_with = ${userId} 
     AND links_activity.is_pinned = ${filter}
     AND links_activity.read = false
     AND shared_links.remove_link = 0`
