@@ -169,8 +169,8 @@ router.put('/:user_id/links/:id/completed', (req, res) => {
         })
 })
 
-router.put('/:user_id/links/:id/title', (req, res) => {
-    db.updateTitle(req.body.title, req.params.id)
+router.put('/:user_id/links/:id/', (req, res) => {
+    db.updateTitle(req.query.title, req.params.id)
         .then(resDb => {
             res.status(200).send({message: 'title updated'})
         })
