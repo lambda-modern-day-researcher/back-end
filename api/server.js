@@ -8,9 +8,11 @@ const linksRouter = require('../routers/links-router/links-router');
 
 const server = express();
 
+let allowedOrigins = ['http://localhost:4000', 'http://localhost:5000', 'http://localhost:3000', 'https://moderndayresearcher.firebaseapp.com']
+
 server.use(helmet());
 server.use(express.json());
-server.use(cors());
+server.use(cors({origin: allowedOrigins}));
 
 // server.use('/api/users/', usersRouter)
 server.use('/api/auth/', authRouter)

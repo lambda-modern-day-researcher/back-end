@@ -5,35 +5,38 @@ const db = require('../database/dbConfig');
 
 describe('server', () => {
 
+    //working
     describe('register', () => {
         it('should send back an arry', () => {
             request(server)
-                .post('/api/auth/login')
+                .post('/api/auth/register')
                 .send({
                     email: 'random@gmail.com',
-                    username: 'random user',
+                    username: 'random user2',
                     password: '1234'
                 })
                 .then(res => {
-                    expect(Array.isArray(res)).toBe(true)
+                    expect(typeof(res)).toBe('object')
                 })
         })
     })
 
+    //working
     describe('login', () => {
         it('should send back a token', () => {
             request(server)
                 .post('/api/auth/login')
                 .send({
-                    username: 'random user',
+                    username: 'random user1',
                     password: '1234'
                 })
                 .then(res => {
-                    expect(typeof(res.token)).toBe('string')
+                    expect(res.status).toBe(200);
                 })
         })
     })
 
+    //working
     describe('link', () => {
         it('should add a link', () => {
             request(server)
@@ -45,50 +48,54 @@ describe('server', () => {
                     shared_with: '1'
                 })
                 .then(res => {
-                    expect(res.message).toBe('link added successfully')
+                    expect(res.status).toBe(200)
                 })
         })
     })
 
+    //working
     describe('link', () => {
         it('should toggle is_pinned state', () => {
-            request(server)
-                .put('/api/aut/users/2/links/2/pinne')
+            return request(server)
+                .put('/api/auth/users/2/links/2/pinned')
                 .then(res => {
-                    expect(res.message).toBe('lin')
+                    expect(res.status).toBe(200)
                 })
         })
     })
 
+    //working
     describe('link', () => {
         it('should toggle completed state', () => {
-            request(server)
+            return request(server)
                 .put('/api/auth/users/2/links/2/completed')
                 .then(res => {
-                    expect(res.message).toBe('link updated')
+                    expect(res.status).toBe(200)
                 })
         })
     })
 
+    //working
     describe('link', () => {
         it('should update the title', () => {
-            request(server)
-                .post('/api/auth/users/2/links/2/title')
+            return request(server)
+                .put('/api/auth/users/2/links/2/title')
                 .send({
                     title: 'newTitle'
                 })
                 .then(res => {
-                    expect(res.message).toBe('title updated')
+                    expect(res.status).toBe(200)
                 })
         })
     })
 
+
     describe('link', () => {
         it('should send back an array of links', () => {
-            request(server)
-                .get('/api/auth/users/')
+            return request(server)
+                .get('/api/auth/users/1/links')
                 .then(res => {
-                    expect(Array.isArray(res)).toBe(true)
+                    expect(res.text).toBe(true)
                 })
         })
     })
