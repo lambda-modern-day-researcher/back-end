@@ -122,7 +122,16 @@ router.post('/:id/links', (req, res) => {
 })
 
 router.post('/:id/links/share',  (req, res) => {
-    db.shareLink(req.body.link_id, req.params.id, req.body.shared_with)
+    if(req.query.social) {
+        db.shareLinkWithOthers(req.params.id, req.body.link_id, req.body.email)
+        .then(resp => {
+            res.status(200).send({message: 'link shared successfully!'})
+        })
+        .catch(err => {
+            res.send(err)
+        })
+    } else {
+        db.shareLink(req.body.link_id, req.params.id, req.body.shared_with)
         .then(resDb => {
             db.getTheLastItem('shared_links')
                 .then(resDb2 => {
@@ -135,6 +144,7 @@ router.post('/:id/links/share',  (req, res) => {
         .catch(err => {
             res.send(err)
         })
+    }
 })
 
 router.put('/:user_id/links/:id/pinned', (req, res) => {
@@ -191,14 +201,8 @@ router.post('/:user_id/links/:link_id/categories/:id', (req, res) => {
         })
 })
 
-router.post('/:user_id/links/:id/social', (req, res) => {
-    db.shareLinkWithOthers(req.params.user_id, req.params.id, req.body.email)
-        .then(resp => {
-            res.status(200).send({message: 'link shared successfully!'})
-        })
-        .catch(err => {
-            res.send(err)
-        })
-})
+// router.post('/:user_id/links/:id/social', (req, res) => {
+
+// })
 
 module.exports = router;
