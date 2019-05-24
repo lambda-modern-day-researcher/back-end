@@ -13,7 +13,7 @@ let allowedOrigins = ['http://localhost:4000', 'http://localhost:5000', 'http://
 
 server.use(helmet());
 server.use(express.json());
-server.use(cors({origin: 'https://moderndayresearcher.firebaseapp.com'}));
+server.use(cors());
 
 // server.use('/api/users/', usersRouter)
 server.use('/api/auth/', authRouter)
